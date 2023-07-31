@@ -20,23 +20,23 @@ router.post("/get", (req, res) => {
 });
 
 router.post("/insert", (req, res) => {
-  const { fname, lname, email, password, confirmPassword } = req.body;
+  
+  const { email, password } = req.body;
 
-  if (password !== confirmPassword) {
-    res.send("Password doesn't match");
-  } else {
     bcrypt.hash(password, 10, function (err, hash) {
-      const hashedPsw = hash;
 
+      if(err) throw err;
+      
+      const hashedPsw = hash;
+    
       connection.query(
-        `INSERT INTO user(fname, lname, email, password) VALUES('${fname}', '${lname}', '${email}', '${hashedPsw}');`,
+        `INSERT INTO user(email, password) VALUES('${email}', '${hashedPsw}');`,
         (err) => {
           if (err) throw err;
-          res.send("Data inserted successfully");
+          res.send("success");
         }
       );
     });
-  }
 });
 
 router.put("/update", (req, res) => {
